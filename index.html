@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>沐微平板互動</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Inter:wght@400;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+ <div id="scene-wrapper">
+  <div id="scene">  
+
+  <!-- ════════════════════════════════════
+       畫面 0：解鎖頁
+       ════════════════════════════════════ -->
+  <div class="screen active" id="screen-lock" onclick="unlockSlideUp()" style="cursor:pointer;">
+    <div class="bg" style="background-image: var(--bg-lock);"></div>
+
+    <!-- 日期 -->
+    <div style="position:absolute;top:113px;left:50%;transform:translateX(-50%);
+                font-size:32px;color:black;white-space:nowrap;opacity:0.9;">
+      11月13日 星期五
+    </div>
+
+    <!-- 時間 -->
+    <div style="position:absolute;top:151px;left:50%;transform:translateX(-50%);
+                font-size:128px;color:black;font-weight:300;letter-spacing:-4px;white-space:nowrap;">
+      23:47
+    </div>
+
+    <!-- 通知卡片 -->
+    <div style="position:absolute;top:820px;left:50%;transform:translateX(-50%);
+                width:600px;background:#FFFFFF80;backdrop-filter:blur(16px);
+                border-radius:20px;padding:25px 27px;display:flex;align-items:center;gap:16px;">
+      <div style="width:48px;height:48px;border-radius:10px;background:#FFF;flex-shrink:0;
+                  display:flex;align-items:center;justify-content:center;text-align:center;font-size:20px;font-family: 'Noto Sans TC';">L</div>
+      <div>
+        <div style="font-family: 'Noto Sans TC';font-size:16px;color: #000;">Lostagram</div>
+        <div style="font-family: 'Noto Sans TC';font-size:16px;color: #000;">你的朋友剛剛發佈了新的限時動態</div>
+      </div>
+    </div>
+
+    <!-- 上滑解鎖提示 -->
+    <div id="lock-swipe-hint" style="position:absolute;bottom:80px;left:50%;transform:translateX(-50%);
+                display:flex;flex-direction:column;align-items:center;gap:10px;user-select:none;">
+      <div style="font-size:18px;color:rgba(255,255,255,0.85);letter-spacing:0.05em;
+                  font-family:'Noto Sans TC';text-shadow:0 1px 4px rgba(0,0,0,0.4);">
+        點擊解鎖
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       畫面 1：限動 1（含想法泡泡）
+       ════════════════════════════════════ -->
+  <div class="screen" id="screen-s1">
+    <div class="story-bg" style="background-image: var(--bg-story1);"></div>
+    <div class="story-overlay"></div>
+
+    <div class="story-hud">
+      <!-- ⬇ 修改：頭像 -->
+      <div class="story-avatar" style="background-image:url('assets/head-pic-1.png');background-size:cover;background-position:center;"></div>
+      <!-- ⬇ 修改：用戶名 -->
+      <div class="story-username">annn_13_chang</div>
+      <div class="progress-bars">
+        <div class="pb-seg active"><div class="pb-fill"></div></div>
+        <div class="pb-seg"><div class="pb-fill"></div></div>
+        <div class="pb-seg"><div class="pb-fill"></div></div>
+        <div class="pb-seg"><div class="pb-fill"></div></div>
+      </div>
+    </div>
+
+    <!-- ⬇ 修改：限動文字 -->
+    <div style="position:absolute;top:500px;left:45px;right:45px;
+                font-size:24px;color:#fff;font-weight:600;text-align:center;line-height:1.4;
+                text-shadow:0 2px 8px rgba(0,0,0,0.6);">
+     又長大一歲啦！祝我22歲生日快樂！
+     <br>
+     謝謝大家一起來幫我慶生！很高興能在大學時期認識你們💗
+    </div>
+
+    <!-- ⬇ 想法泡泡（點右側才淡入） -->
+    <div class="thought-dots"><span></span><span></span></div>
+    <div class="thought-box">
+      <!-- ⬇ 修改：想法標題 -->
+      <h3>沐微的想法</h3>
+      <!-- ⬇ 修改：想法內文 -->
+      <p>我不知道他今天生日，即使一起在系上共事了很多次，我們好像還是不熟。聚會、出遊，任何課業、系上活動外的事物，他們很少邀我參加。</p>
+      <div class="tap-hint">右擊繼續</div>
+    </div>
+
+    <div class="reply-bar">
+      <div class="reply-input">傳送訊息</div>
+      <div class="reply-heart">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+    </div>
+
+    <div class="tap-left"  onclick="goPrev()"></div>
+    <div class="tap-right" onclick="goNextStory()"></div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       畫面 2：（保留，不使用）
+       ════════════════════════════════════ -->
+  <div class="screen" id="screen-t1"></div>
+
+  <!-- ════════════════════════════════════
+       畫面 3：限動 2（含想法泡泡）
+       ════════════════════════════════════ -->
+  <div class="screen" id="screen-s2">
+    <div class="story-bg" style="background-image: var(--bg-story2);"></div>
+    <div class="story-overlay"></div>
+
+    <div class="story-hud">
+      <div class="story-avatar" style="background-image:url('assets/head-pic-2.png');background-size:cover;background-position:center;"></div>
+      <!-- ⬇ 修改：第2個帳號 -->
+      <div class="story-username">photography_kai</div>
+      <div class="progress-bars">
+        <div class="pb-seg done"><div class="pb-fill"></div></div>
+        <div class="pb-seg active"><div class="pb-fill"></div></div>
+        <div class="pb-seg"><div class="pb-fill"></div></div>
+        <div class="pb-seg"><div class="pb-fill"></div></div>
+      </div>
+    </div>
+
+    <!-- ⬇ 修改：限動2文字 -->
+    <div style="position:absolute;top:520px;left:45px;right:45px;
+                font-size:24px;color:#fff;text-align:center;line-height:1.5;
+                text-shadow:0 2px 8px rgba(0,0,0,0.6);">
+      📍新加坡<br>在這裡找角度找了一個下午，拍到這個很值得！
+    </div>
+
+    <!-- ⬇ 想法泡泡（點右側才淡入） -->
+    <div class="thought-dots"><span></span><span></span></div>
+    <div class="thought-box">
+      <h3>沐微的想法</h3>
+      <!-- ⬇ 修改 -->
+      <p>這張的構圖好好看！我也想拍出這樣的照片，但我已經很久沒碰相機了，光是用系上活動和課堂上的事情就讓我忙得快喘不過氣了⋯⋯</p>
+      <div class="tap-hint">右擊繼續</div>
+    </div>
+
+    <div class="reply-bar">
+      <div class="reply-input">傳送訊息</div>
+      <div class="reply-heart">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+    </div>
+
+    <div class="tap-left"  onclick="goPrev()"></div>
+    <div class="tap-right" onclick="goNextStory()"></div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       畫面 4：（保留，不使用）
+       ════════════════════════════════════ -->
+  <div class="screen" id="screen-t2"></div>
+
+  <!-- ════════════════════════════════════
+       畫面 5：限動 3（含想法泡泡）
+       ════════════════════════════════════ -->
+  <div class="screen" id="screen-s3">
+    <div class="story-bg" style="background-image: var(--bg-story3);"></div>
+    <div class="story-overlay"></div>
+
+    <div class="story-hud">
+      <div class="story-avatar" style="background:#e0e0e0;display:flex;align-items:center;justify-content:center;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#000000" style="width:60%;height:60%;"><path d="M480-400q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0 280q-139 0-241-91.5T122-440h82q14 104 92.5 172T480-200q117 0 198.5-81.5T760-480q0-117-81.5-198.5T480-760q-69 0-129 32t-101 88h110v80H120v-240h80v94q51-64 124.5-99T480-840q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-480q0 75-28.5 140.5t-77 114q-48.5 48.5-114 77T480-120Z"/></svg>
+      </div>
+      <!-- ⬇ 修改：第3個帳號 -->
+      <div class="story-username">限動回顧：四年前</div>
+      <div class="progress-bars">
+        <div class="pb-seg done"><div class="pb-fill"></div></div>
+        <div class="pb-seg done"><div class="pb-fill"></div></div>
+        <div class="pb-seg active"><div class="pb-fill"></div></div>
+        <div class="pb-seg"><div class="pb-fill"></div></div>
+      </div>
+    </div>
+
+    <!-- ⬇ 修改：限動3文字 -->
+    <div style="position:absolute;top:600px;left:50px;right:45px;
+                font-size:20px;font-weight:600;color:#fff;text-align:left;line-height:1.5;
+                text-shadow:0 2px 8px rgba(0,0,0,0.6);">
+      2022 bye~<br>
+      2023我來了！<br>
+      跨完年後回去的路上我們聊了好多❤️<br>
+      以後還要跟你們一起來跨年！
+    </div>
+
+    <!-- ⬇ 想法泡泡（點右側才淡入） -->
+    <div class="thought-dots"><span></span><span></span></div>
+    <div class="thought-box">
+      <h3>沐微的想法</h3>
+      <!-- ⬇ 修改 -->
+      <p>沒想到已經高中畢業四年了⋯⋯好想念高中那群朋友們⋯⋯大家每天都聚在一起、形影不離。現在在大學裡大家都來來去去，我也一直在跟隨著大家的步伐，但我究竟是為了什麼呢⋯⋯？</p>
+      <div class="tap-hint">右擊繼續</div>
+    </div>
+
+    <div class="reply-bar">
+      <div class="reply-input">傳送訊息</div>
+      <div class="reply-heart">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+    </div>
+
+    <div class="tap-left"  onclick="goPrev()"></div>
+    <div class="tap-right" onclick="goNextStory()"></div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       畫面 6：（保留，不使用）
+       ════════════════════════════════════ -->
+  <div class="screen" id="screen-t3"></div>
+
+  <!-- ════════════════════════════════════
+       畫面 7+8：訊息通知 → 情境選擇（同一畫面，時序淡入）
+       ════════════════════════════════════ -->
+  <div class="screen" id="screen-msgs">
+    <div class="bg" style="background-image: var(--bg-msgs);"></div>
+
+    <!-- 訊息1：進入畫面立即淡入 -->
+    <div class="msg-card" id="msg-card-1">
+      <div class="msg-card-avatar">
+        <img src="assets/group-pic.png" alt="群組" onerror="this.style.display='none'">
+        <span class="msg-card-initials">K</span>
+      </div>
+      <div class="msg-card-body">
+        <div class="msg-card-header">
+          <span class="msg-card-name">系學會老人群</span>
+          <span class="msg-card-app">訊息</span>
+          <span class="msg-card-time">剛剛</span>
+        </div>
+        <div class="msg-card-text">週六系上有個活動，需要人手來幫忙，結束後可以一起去續攤，走嗎？</div>
+      </div>
+    </div>
+
+    <!-- 訊息2：2 秒後淡入 -->
+    <div class="msg-card" id="msg-card-2">
+      <div class="msg-card-avatar" style="display:flex;align-items:center;justify-content:center;font-size:28px;background:#FFD600;">
+        📷
+      </div>
+      <div class="msg-card-body">
+        <div class="msg-card-header">
+          <span class="msg-card-name">一起趣攝影</span>
+          <span class="msg-card-app">訊息</span>
+          <span class="msg-card-time">剛剛</span>
+        </div>
+        <div class="msg-card-text">大家，星期六的打算去宜蘭外拍，有空的一起來認識認識吧！</div>
+      </div>
+    </div>
+
+    <!-- 情境選擇區：5 秒後（msg2+3秒）淡入 -->
+    <div id="choice-section">
+      <!-- 說明文字 -->
+      <div class="choice-label">你會怎麼選擇？</div>
+      <div class="choice-sublabel">兩個邀約都在星期六⋯⋯選一個吧</div>
+
+      <!-- 選項A -->
+      <div class="choice-card choice-card-a" onclick="chooseA()">
+        <div class="choice-card-inner">
+          <div class="choice-card-title">選項 A｜去系上幫忙</div>
+          <div class="choice-card-desc">回覆 系學會老人群：「沒問題，我會去幫忙！」<br>已經去了那麼多次系上的活動，這次能跟大家變更熟嗎⋯⋯</div>
+        </div>
+        <div class="choice-card-hint">點擊選取</div>
+      </div>
+
+      <!-- 選項B -->
+      <div class="choice-card choice-card-b" onclick="chooseB()">
+        <div class="choice-card-inner">
+          <div class="choice-card-title">選項 B｜去外拍</div>
+          <div class="choice-card-desc">回覆 一起趣攝影：「加我一個！」<br>我不認識任何人，會不會到了現場很尷尬啊⋯⋯</div>
+        </div>
+        <div class="choice-card-hint">點擊選取</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       畫面 8：情境選擇（空 placeholder，保留索引）
+       ════════════════════════════════════ -->
+  <div class="screen" id="screen-choice">
+    <!-- 此畫面已整合進 screen-msgs，保留僅供索引 -->
+  </div>
+
+  <!-- ════════════════════════════════════
+       畫面 9：結局 A
+       ════════════════════════════════════ -->
+  <div class="screen" id="screen-ra">
+    <div class="bg" style="background: linear-gradient(160deg, #1a2a4a 0%, #0f1520 100%);"></div>
+
+    <!-- 選項標籤（立即顯示） -->
+    <div class="result-choice-label result-choice-a">選擇了選項 A</div>
+
+    <!-- 故事卡片（立即顯示） -->
+    <div class="result-story-card result-story-a">
+      <p>
+        沐微早上到下午都在幫忙，晚餐和系上同學們一起去吃了快炒，
+        吃飯時大家都在聊一個沐微不認識的人的故事，她有時候會點個頭附和一下，然後繼續吃她的飯。
+        <br><br>
+        回家後，沐微打開手機，看見攝影群組中有人發了當天的攝影照：「今天的天氣很好，構圖出來很漂亮！」
+      </p>
+    </div>
+
+    <!-- 沐微內心 + 繼續按鈕（2 秒後淡入） -->
+    <div class="result-delayed" id="result-a-delayed">
+      <div class="thought-box result-thought">
+        <h3>沐微的內心</h3>
+        <p>「這次是去對了嗎？」</p>
+      </div>
+      <div class="thought-dots result-thought-dots">
+        <span></span><span></span>
+      </div>
+      <button class="btn-continue result-btn-continue" onclick="goTo(11)">» 繼續</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       畫面 10：結局 B
+       ════════════════════════════════════ -->
+  <div class="screen" id="screen-rb">
+    <div class="bg" style="background: linear-gradient(160deg, #2a1a3a 0%, #150f20 100%);"></div>
+
+    <!-- 選項標籤（立即顯示） -->
+    <div class="result-choice-label result-choice-b">選擇了選項 B</div>
+
+    <!-- 故事卡片（立即顯示） -->
+    <div class="result-story-card result-story-b">
+      <p>
+        沐微一大早就去郊區和「一起趣攝影」的夥伴們會合，一開始沐微都自己一個人在旁邊拍，
+        後來一位叫小婷的女生過來詢問沐微都是怎麼取景的，兩人邊聊邊拍，時間不知不覺就過去了。
+      </p>
+    </div>
+
+    <!-- 沐微內心 + 繼續按鈕（2 秒後淡入） -->
+    <div class="result-delayed" id="result-b-delayed">
+      <div class="thought-box result-thought">
+        <h3>沐微的內心</h3>
+        <p>「好累⋯⋯但今天過的很充實！」</p>
+      </div>
+      <div class="thought-dots result-thought-dots">
+        <span></span><span></span>
+      </div>
+      <button class="btn-continue result-btn-continue" onclick="goTo(11)">» 繼續</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       畫面 11：最終畫面
+       ════════════════════════════════════ -->
+  <div class="screen" id="screen-final">
+    <div class="bg" style="background: #0a0a0a;"></div>
+
+    <!-- 社群時間區塊 -->
+    <div class="final-stats">
+      <div class="final-stats-label">沐微今天在社群媒體上待了</div>
+      <div class="final-stats-number">
+        <span id="final-counter">0</span>
+      </div>
+      <div class="final-stats-unit">分　鐘</div>
+    </div>
+
+    <!-- 延遲淡入區（2 秒後） -->
+    <div class="final-delayed" id="final-delayed">
+      <div class="final-sub-text">
+        現在時間已經快接近凌晨一點了<br>
+        但沐微仍然沒有完成她書桌上的自然攝影計劃書
+      </div>
+
+      <div class="thought-box final-thought">
+        <h3>沐微的內心</h3>
+        <p>「其他人的動態滑一滑，又到睡覺時間了，計劃書被我拖了好久好久⋯⋯」</p>
+      </div>
+      <div class="thought-dots final-thought-dots">
+        <span></span><span></span>
+      </div>
+
+      <div class="final-buttons">
+        <button class="btn-back" onclick="goBack()">↩ 回上一頁</button>
+        <button class="btn-restart" onclick="restart()">↺ 從頭開始</button>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /scene -->
+ </div><!-- /scene-wrapper -->
+</div><!-- /app -->
+
+<script src="script.js"></script>
+</body>
+</html>

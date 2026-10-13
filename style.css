@@ -1,0 +1,673 @@
+/* ════════════════════════════════════════════════════════════
+   花琪平板互動 ─ 樣式表
+   ════════════════════════════════════════════════════════════ */
+
+/* ── 重置 ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100%;
+  background: #111;
+  font-family: 'Noto Sans TC', sans-serif;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ── 場景外框 ── */
+#app {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  background: #111;
+  overflow: hidden;
+}
+#scene-wrapper { position: relative; flex-shrink: 0; }
+#scene {
+  position: absolute; top: 0; left: 0;
+  width: 834px; height: 1194px;
+  overflow: hidden; background: #000;
+  transform-origin: top left;
+}
+
+/* ── 畫面基底 ── */
+.screen {
+  position: absolute; inset: 0;
+  width: 834px; height: 1194px;
+  display: none;
+}
+.screen.active { display: block; }
+
+/* ══════════════════════════════════════
+   ★ 背景圖設定區（只需改這裡）
+   把 url('...') 換成你的圖片路徑或 base64
+   ══════════════════════════════════════ */
+:root {
+  --bg-lock:    url('assets/unlock_pexels.jpg');    /* 解鎖頁 */
+  --bg-story1:  url('assets/hi.jpg');     /* 限動1 */
+  --bg-thought1: url('assets/hi.jpg');    /* 想法頁*/
+  --bg-story2:  url('assets/bay-view.jpg');     /* 限動2 */
+  --bg-thought2: url('assets/bay-view.jpg');    /* 想法頁*/
+  --bg-story3:  url('assets/firework_unsplash.jpg');     /* 限動3 */
+  --bg-thought3: url('assets/firework_unsplash.jpg');    /* 想法頁*/
+  --bg-msgs:    url('assets/message_notification.jpg');  /* 訊息通知 */
+  --bg-choice:  url('assets/situation_selection.jpg');  /* 情境選擇 */
+}
+
+/* ── 通用背景套用 ── */
+.bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+/* ── 限動 HUD：進度條 + 頭像 + 用戶名 ── */
+.story-hud {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 210px; pointer-events: none; z-index: 10;margin-left: 24px;
+}
+.progress-bars {
+  position: absolute; left: 145px; top: 172px;
+  display: flex; gap: 15px; width: 600px;
+}
+.pb-seg {
+  flex: 1; height: 5px; border-radius: 3px;
+  background: rgba(255,255,255,0.35); overflow: hidden;
+}
+.pb-seg .pb-fill { height: 100%; border-radius: 3px; background: #fff; width: 0%; }
+.pb-seg.done .pb-fill { width: 100%; }
+.pb-seg.active .pb-fill { animation: fillBar 3s linear forwards; }
+@keyframes fillBar { from { width: 0% } to { width: 100% } }
+
+.story-avatar {
+  position: absolute; left: 24px; top: 111px;
+  width: 100px; height: 100px; border-radius: 50%;
+  background: rgba(200,200,200,0.4);
+  border: 3px solid rgba(255,255,255,0.7);
+  object-fit: cover;
+}
+.story-username {
+  position: absolute; left: 145px; top: 135px;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 20px; color: #fff; white-space: nowrap;
+  margin-bottom: 40px;
+}
+
+/* ── 限動背景 ── */
+.story-bg {
+  position: absolute; top: 72px; left: 0;
+  width: 834px; height: 981px;
+  background-size: cover; background-position: center;
+  border-radius: 20px;
+}
+.story-overlay {
+  position: absolute; top: 72px; left: 0;
+  width: 834px; height: 981px; border-radius: 20px;
+  background: rgba(0,0,0,0.45);
+}
+
+/* ── 限動點擊熱區（左返回 / 右繼續） ── */
+.tap-left {
+  position: absolute; top: 0; left: 0;
+  width: 35%; height: 100%; cursor: pointer; z-index: 5;
+}
+.tap-right {
+  position: absolute; top: 0; right: 0;
+  width: 65%; height: 100%; cursor: pointer; z-index: 5;
+  pointer-events: none; /* 預設不可點擊，等打字完成才啟用 */
+}
+.tap-right.tap-right-ready {
+  pointer-events: auto; /* 打字機效果結束後啟用右側點擊 */
+}
+
+/* ── 回覆列 ── */
+.reply-bar {
+  position: absolute; bottom: 43px; right: 45px;
+  display: flex; align-items: center; gap: 44px;
+  pointer-events: none; z-index: 10;
+}
+.reply-input {
+  background: #e5e5e5; border-radius: 50px;
+  padding: 14px 20px; width: 650px;
+  font-family: 'Noto Sans TC', sans-serif; font-size: 20px; color: #000;
+}
+.reply-heart svg { width: 36px; height: 36px; stroke: #fff; fill: none; stroke-width: 2; }
+
+/* ── 想法泡泡 ── */
+.thought-box {
+  position: absolute; bottom: 220px; left: 45px; right: 45px;
+  padding: 28px 24px 20px;
+  background: rgba(58,134,200,0.64);
+  border: 1px solid #3a86c8; border-radius: 29px;
+  z-index: 20; pointer-events: none;
+}
+.thought-box h3 {
+  font-family: 'Inter', sans-serif; font-weight: 700;
+  font-size: 20px; color: #fff; margin-bottom: 10px;
+}
+.thought-box p {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 16px; color: #fff; line-height: 1.75;
+}
+.thought-dots {
+  position: absolute; bottom: 170px; left: 30px; pointer-events: none; z-index: 20;
+}
+.thought-dots span {
+  display: block; border-radius: 50%;
+  background: rgba(58,134,200,0.64); border: 1px solid #3a86c8;
+}
+.thought-dots span:nth-child(1) { width: 22px; height: 22px; margin-bottom: 10px; }
+.thought-dots span:nth-child(2) { width: 11px; height: 11px; }
+
+.tap-hint {
+  position: relative; margin-top: 16px; text-align: right;
+  font-size: 15px; color: rgba(255,255,255,0.75);
+  display: flex; align-items: center; justify-content: flex-end; gap: 8px; z-index: 20;
+  opacity: 0; transition: opacity 0.4s ease; /* 預設隱藏，打字完成後由 JS 顯示 */
+}
+.tap-hint::before { content: '●'; font-size: 9px; }
+.tap-hint.tap-hint-ready { opacity: 1; }
+
+/* ── 情境選擇按鈕 ── */
+.choice-btn {
+  position: absolute; left: 45px; right: 45px;
+  border-radius: 24px; padding: 28px 24px; cursor: pointer; z-index: 20;
+}
+.choice-btn h3 { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+.choice-btn p  { font-size: 16px; color: rgba(255,255,255,0.85); line-height: 1.6; }
+.choice-a { top: 620px; background: rgba(255,151,200,0.30); border: 5px solid #ff97c8; }
+.choice-b { top: 850px; background: rgba(186,151,255,0.30); border: 5px solid #ba97ff; }
+.choice-a:hover { background: rgba(255,151,200,0.45); }
+.choice-b:hover { background: rgba(186,151,255,0.45); }
+
+/* ── 繼續 / 返回 按鈕 ── */
+.btn-continue {
+  position: absolute; bottom: 80px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(100,204,75,0.47); border: 2px solid #64cc4b;
+  border-radius: 50px; padding: 18px 60px;
+  font-family: 'Noto Sans TC', sans-serif; font-size: 20px; color: #fff;
+  cursor: pointer; white-space: nowrap; z-index: 20;
+}
+.btn-continue:hover { background: rgba(100,204,75,0.65); }
+
+.btn-back {
+  position: absolute; bottom: 80px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(204,75,75,0.47); border: 2px solid #cc4b4b;
+  border-radius: 50px; padding: 18px 60px;
+  font-family: 'Noto Sans TC', sans-serif; font-size: 20px; color: #fff;
+  cursor: pointer; white-space: nowrap; z-index: 20;
+}
+.btn-back:hover { background: rgba(204,75,75,0.65); }
+
+/* ── 文字卡（結局頁） ── */
+.result-card {
+  position: absolute; top: 300px; left: 45px; right: 45px;
+  background: rgba(0,0,0,0.55); border-radius: 24px;
+  padding: 40px 36px;
+}
+.result-card h2 { font-size: 28px; color: #fff; font-weight: 700; margin-bottom: 16px; }
+.result-card p  { font-size: 18px; color: rgba(255,255,255,0.88); line-height: 1.8; }
+
+/* ── 訊息通知樣式 ── */
+.msg-bubble {
+  position: absolute; left: 45px; right: 45px;
+  background: rgba(30,30,30,0.88); border-radius: 20px;
+  padding: 22px 26px;
+  display: flex; align-items: flex-start; gap: 16px;
+}
+.msg-bubble .msg-icon {
+  width: 52px; height: 52px; border-radius: 12px;
+  background: #3a86c8; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+}
+.msg-bubble .msg-body p:first-child {
+  font-size: 15px; color: rgba(255,255,255,0.5); margin-bottom: 4px;
+}
+.msg-bubble .msg-body p:last-child {
+  font-size: 18px; color: #fff; line-height: 1.5;
+}
+
+/* ── 最終畫面 ── */
+#screen-final {
+  display: none;
+  background: #0d0d0d;
+}
+#screen-final.active { display: block; }
+#screen-final .final-title {
+  font-size: 36px; color: #fff; font-weight: 700; text-align: center;
+  line-height: 1.4;
+}
+#screen-final .final-sub {
+  font-size: 18px; color: rgba(255,255,255,0.6); text-align: center;
+  line-height: 1.7; max-width: 680px;
+}
+#screen-final .btn-restart {
+  background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50px; padding: 18px 60px;
+  font-family: 'Noto Sans TC', sans-serif; font-size: 20px; color: #fff;
+  cursor: pointer;
+}
+#screen-final .btn-restart:hover { background: rgba(255,255,255,0.22); }
+
+/* ── 想法泡泡淡入（預設隱藏，點一次右側才出現） ── */
+.thought-box,
+.thought-dots {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.thought-visible .thought-box,
+.thought-visible .thought-dots {
+  opacity: 1;
+}
+
+/* ════════════════════════════════════════════
+   畫面7+8 新樣式：iOS 風格訊息卡片 + 情境選擇
+   ════════════════════════════════════════════ */
+
+/* ── iOS 訊息通知卡片 ── */
+.msg-card {
+  position: absolute;
+  left: 36px; right: 36px;
+  background: rgba(255,255,255,0.92);
+  border-radius: 20px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  opacity: 0;
+  transform: translateY(-56px);
+  transition: opacity 0.35s ease,
+              transform 0.5s cubic-bezier(0.34, 1.5, 0.64, 1);
+  pointer-events: none;
+}
+.msg-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* 訊息2（第二則）在上，訊息1 在下 */
+#msg-card-1 { top: 120px; }
+#msg-card-2 { top: 20px; }
+
+/* 頭像 */
+.msg-card-avatar {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  background: #e0e0e0;
+  display: flex; align-items: center; justify-content: center;
+}
+.msg-card-avatar img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  position: absolute; inset: 0;
+}
+.msg-card-initials {
+  font-size: 22px; font-weight: 700;
+  color: #888;
+  position: relative; z-index: 1;
+}
+
+/* 內文區 */
+.msg-card-body { flex: 1; min-width: 0; }
+.msg-card-header {
+  display: flex; align-items: baseline; gap: 6px;
+  margin-bottom: 4px;
+}
+.msg-card-name {
+  font-size: 15px; font-weight: 700;
+  color: #111;
+}
+.msg-card-app {
+  font-size: 13px; color: #888;
+}
+.msg-card-time {
+  font-size: 13px; color: #aaa;
+  margin-left: auto;
+}
+.msg-card-text {
+  font-size: 15px; color: #222;
+  line-height: 1.5;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ── 情境選擇區 ── */
+#choice-section {
+  position: absolute;
+  left: 0; right: 0;
+  top: 640px;
+  padding: 0 36px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+#choice-section.visible { opacity: 1; pointer-events: auto; }
+
+.choice-label {
+  font-size: 22px; font-weight: 700;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 6px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.choice-sublabel {
+  font-size: 15px; color: rgba(255,255,255,0.75);
+  text-align: center;
+  margin-bottom: 22px;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+/* 選項卡片 */
+.choice-card {
+  border-radius: 18px;
+  padding: 20px 22px 14px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.choice-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.25);
+}
+.choice-card:active { transform: scale(0.98); }
+
+.choice-card-a {
+  background: rgba(255,255,255,0.12);
+  border: 3px solid #ff97c8;
+  box-shadow: 0 4px 20px rgba(255,151,200,0.25);
+}
+.choice-card-b {
+  background: rgba(255,255,255,0.12);
+  border: 3px solid #ba97ff;
+  box-shadow: 0 4px 20px rgba(186,151,255,0.25);
+}
+
+.choice-card-inner { margin-bottom: 8px; }
+.choice-card-title {
+  font-size: 18px; font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.choice-card-a .choice-card-title { color: #ffcce8; }
+.choice-card-b .choice-card-title { color: #deccff; }
+
+.choice-card-desc {
+  font-size: 14px; color: rgba(255,255,255,0.82);
+  line-height: 1.6;
+}
+.choice-card-hint {
+  font-size: 12px; color: rgba(255,255,255,0.5);
+  text-align: right;
+}
+
+/* ════════════════════════════════════════════
+   結局頁（畫面9/10）新樣式
+   ════════════════════════════════════════════ */
+
+/* 選項標籤 */
+.result-choice-label {
+  position: absolute;
+  top: 180px; left: 45px; right: 45px;
+  text-align: center;
+  font-size: 26px; font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+.result-choice-a { color: #ffcce8; }
+.result-choice-b { color: #deccff; }
+
+/* 故事卡片 */
+.result-story-card {
+  position: absolute;
+  top: 250px; left: 45px; right: 45px;
+  border-radius: 20px;
+  padding: 30px 28px;
+  background: rgba(255,255,255,0.07);
+}
+.result-story-a { border: 3px solid #ff97c8; }
+.result-story-b { border: 3px solid #ba97ff; }
+
+.result-story-card p {
+  font-size: 17px; color: rgba(255,255,255,0.88);
+  line-height: 1.8;
+}
+
+/* 延遲淡入區（內心 + 繼續按鈕） */
+.result-delayed {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 60px;
+  padding: 0 45px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+.result-delayed.visible { opacity: 1; pointer-events: auto; }
+
+/* 結局頁內的 thought-box 位置覆蓋 */
+.result-thought {
+  position: relative !important;
+  bottom: auto !important; left: auto !important; right: auto !important;
+  margin-bottom: 0;
+}
+.result-thought-dots {
+  position: relative !important;
+  bottom: auto !important; left: auto !important;
+  display: flex; flex-direction: row; gap: 8px;
+  padding: 10px 0 16px 8px;
+}
+.result-thought-dots span { display: inline-block; }
+
+.result-btn-continue {
+  position: relative !important;
+  left: auto !important; bottom: auto !important;
+  transform: none !important;
+  width: 100%;
+  text-align: center;
+}
+
+/* ════════════════════════════════════════════
+   最終畫面（畫面11）新樣式
+   ════════════════════════════════════════════ */
+
+/* display 已在上方統一設定 */
+
+/* 社群時間數字區 */
+.final-stats {
+  position: absolute;
+  top: 240px; left: 0; right: 0;
+  text-align: center;
+}
+.final-stats-label {
+  font-size: 18px; color: rgba(255,255,255,0.7);
+  margin-bottom: 24px;
+}
+.final-stats-number {
+  font-size: 120px; font-weight: 700;
+  color: #fff; line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 12px;
+}
+.final-stats-unit {
+  font-size: 22px; color: rgba(255,255,255,0.6);
+  letter-spacing: 0.3em;
+}
+
+/* 延遲淡入區 */
+.final-delayed {
+  position: absolute;
+  left: 0; right: 0;
+  top: 560px;
+  padding: 0 45px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+.final-delayed.visible { opacity: 1; pointer-events: auto; }
+
+.final-sub-text {
+  font-size: 16px; color: rgba(255,255,255,0.65);
+  text-align: center; line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+/* 最終頁內的 thought-box 位置覆蓋 */
+.final-thought {
+  position: relative !important;
+  bottom: auto !important; left: auto !important; right: auto !important;
+  margin-bottom: 0;
+}
+.final-thought-dots {
+  position: relative !important;
+  bottom: auto !important; left: auto !important;
+  display: flex; flex-direction: row; gap: 8px;
+  padding: 10px 0 28px 8px;
+}
+.final-thought-dots span { display: inline-block; }
+
+/* 最終頁按鈕並排 */
+.final-buttons {
+  display: flex; gap: 20px; justify-content: center;
+}
+.final-buttons .btn-back,
+.final-buttons .btn-restart {
+  position: relative !important;
+  bottom: auto !important; left: auto !important;
+  transform: none !important;
+  flex: 1;
+  text-align: center;
+  padding: 16px 20px;
+}
+
+
+/* ════════════════════════════════════════════
+   強制覆蓋：結局/最終頁按鈕排版修正
+   ════════════════════════════════════════════ */
+
+/* final-buttons 內的按鈕完全重設 position */
+.final-buttons .btn-back,
+.final-buttons .btn-restart {
+  position: static !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+  width: auto !important;
+  flex: 1;
+  text-align: center;
+  padding: 16px 20px !important;
+  white-space: normal;
+  z-index: auto !important;
+  pointer-events: auto !important;
+}
+
+/* result-delayed 內的繼續按鈕重設 */
+.result-btn-continue {
+  position: static !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  text-align: center;
+  z-index: auto !important;
+  pointer-events: auto !important;
+}
+
+/* thought-box 在 result-delayed/final-delayed 內重設 position */
+.result-delayed .thought-box,
+.final-delayed .thought-box {
+  position: static !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  pointer-events: none;
+}
+
+/* thought-dots 在容器內重設 */
+.result-delayed .thought-dots,
+.final-delayed .thought-dots {
+  position: static !important;
+  bottom: auto !important;
+  left: auto !important;
+  display: flex !important;
+  flex-direction: row;
+  gap: 8px;
+  padding: 8px 0 12px 8px;
+}
+.result-delayed .thought-dots span,
+.final-delayed .thought-dots span {
+  display: inline-block !important;
+}
+
+/* final-delayed 本身確保可點擊 */
+.final-delayed.visible,
+.result-delayed.visible {
+  pointer-events: auto !important;
+}
+.final-delayed.visible *,
+.result-delayed.visible * {
+  pointer-events: auto;
+}
+/* 但 thought-box 和 thought-dots 不需要點擊 */
+.final-delayed.visible .thought-box,
+.final-delayed.visible .thought-dots,
+.result-delayed.visible .thought-box,
+.result-delayed.visible .thought-dots {
+  pointer-events: none;
+}
+
+
+/* ════════════════════════════════════════════
+   CRITICAL FIX: result/final 容器內的 thought-box
+   不受全域 opacity:0 控制，必須強制顯示
+   ════════════════════════════════════════════ */
+.result-delayed .thought-box,
+.result-delayed .thought-dots,
+.final-delayed .thought-box,
+.final-delayed .thought-dots {
+  opacity: 1 !important;
+  pointer-events: none;
+}
+
+
+/* ════════════════════════════════════════════
+   解鎖頁：上滑手勢 + 箭頭動畫
+   ════════════════════════════════════════════ */
+
+/* 跳動箭頭（向上的 chevron） */
+.lock-chevron {
+  width: 36px;
+  height: 36px;
+  border-right: 3px solid rgba(255,255,255,0.85);
+  border-top: 3px solid rgba(255,255,255,0.85);
+  transform: rotate(-45deg);  /* 指向上方 */
+  animation: lock-chevron-pulse 1.4s ease-in-out infinite;
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.4));
+}
+
+@keyframes lock-chevron-pulse {
+  0%   { opacity: 0.2; transform: rotate(-45deg) translateY(6px); }
+  50%  { opacity: 1;   transform: rotate(-45deg) translateY(0px); }
+  100% { opacity: 0.2; transform: rotate(-45deg) translateY(6px); }
+}
+
+/* 解鎖頁整體跟隨手指上移 */
+#screen-lock.dragging {
+  transition: none !important;
+}
+
+/* 解鎖完成：畫面飛出（向上） */
+#screen-lock.unlock-out {
+  transition: transform 0.45s cubic-bezier(0.32, 0, 0.67, 0) !important;
+  transform: translateY(-100%) !important;
+}
