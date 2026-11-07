@@ -45,6 +45,47 @@ window.addEventListener('resize', scaleScene);
 scaleScene();
 
 /* ── 進入限動頁時，3秒後自動淡入想法泡泡 ── */
+
+/* ── 限動時間動畫（配合進度條 3 秒）── */
+const storyTimeConfig = {
+  1: { startH: 23, startM: 47, endH: 23, endM: 50 },
+  3: { startH:  0, startM: 15, endH:  0, endM: 18 },
+  5: { startH:  0, startM: 35, endH:  0, endM: 38 },
+};
+const storyTimeIds = { 1: 'story-time-1', 3: 'story-time-2', 5: 'story-time-3' };
+let storyTimeRaf = null;
+
+function startStoryTime(idx) {
+  if (storyTimeRaf) cancelAnimationFrame(storyTimeRaf);
+  const cfg = storyTimeConfig[idx];
+  const elId = storyTimeIds[idx];
+  if (!cfg || !elId) return;
+  const el = document.getElementById(elId);
+  if (!el) return;
+
+  const startTotal = cfg.startH * 60 + cfg.startM;
+  const endTotal   = cfg.endH   * 60 + cfg.endM;
+  const duration   = 3000; // ms，配合進度條
+  const startTs    = performance.now();
+
+  function fmt(total) {
+    const h = Math.floor(total / 60) % 24;
+    const m = total % 60;
+    const prefix = (h >= 1 && h <= 4) ? '凌晨 ' : '晚上 ';
+    return prefix + String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+  }
+
+  el.textContent = fmt(startTotal);
+
+  function tick(now) {
+    const p = Math.min((now - startTs) / duration, 1);
+    const cur = Math.round(startTotal + (endTotal - startTotal) * p);
+    el.textContent = fmt(cur);
+    if (p < 1) storyTimeRaf = requestAnimationFrame(tick);
+  }
+  storyTimeRaf = requestAnimationFrame(tick);
+}
+
 function scheduleThought(screenId) {
   clearTimeout(thoughtTimer);
   thoughtTimer = setTimeout(() => {
@@ -181,7 +222,7 @@ function startFinalSequence() {
   if (delayed) delayed.classList.remove('visible');
 
   // 數字滾動動畫：1.5 秒內從 0 → 47
-  const target = 47;
+  const target = 48;
   const duration = 1500;
   const startTime = performance.now();
   function tick(now) {
@@ -274,6 +315,7 @@ function goTo(idx) {
         const storyScreens = { 1: 'screen-s1', 3: 'screen-s2', 5: 'screen-s3' };
         if (storyScreens[idx]) {
           scheduleThought(storyScreens[idx]);
+          startStoryTime(idx);
         }
         /* 如果是訊息頁，啟動時序淡入 */
         if (idx === 7) {
@@ -329,7 +371,7 @@ function showScreen(idx) {
   });
   current = idx;
   const storyMap = { 1: 'screen-s1', 3: 'screen-s2', 5: 'screen-s3' };
-  if (storyMap[idx]) scheduleThought(storyMap[idx]);
+  if (storyMap[idx]) { scheduleThought(storyMap[idx]); startStoryTime(idx); }
   if (idx === 7) startMsgsSequence();
   if (idx === 9 || idx === 10) startResultSequence(idx);
   if (idx === 11) startFinalSequence();

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>沐微平板互動</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Inter:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Inter:wght@400;700&family=Ma+Shan+Zheng&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -90,7 +90,7 @@
       <h3>沐微的想法</h3>
       <!-- ⬇ 修改：想法內文 -->
       <p>我不知道他今天生日，即使一起在系上共事了很多次，我們好像還是不熟。聚會、出遊，任何課業、系上活動外的事物，他們很少邀我參加。</p>
-      <div class="tap-hint">右擊繼續</div>
+      <div class="tap-hint">繼續滑下一則</div>
     </div>
 
     <div class="reply-bar">
@@ -98,6 +98,15 @@
       <div class="reply-heart">
         <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </div>
+    </div>
+
+    <!-- 時間提示：23:47 -->
+    <div id="story-time-1" style="position:absolute;top:80px;right:20px;
+                font-size:15px;color:rgba(255,255,255,0.85);
+                font-family:'Noto Sans TC';letter-spacing:0.03em;
+                text-shadow:0 1px 4px rgba(0,0,0,0.5);
+                pointer-events:none;">
+      23:47
     </div>
 
     <div class="tap-left"  onclick="goPrev()"></div>
@@ -141,7 +150,7 @@
       <h3>沐微的想法</h3>
       <!-- ⬇ 修改 -->
       <p>這張的構圖好好看！我也想拍出這樣的照片，但我已經很久沒碰相機了，光是用系上活動和課堂上的事情就讓我忙得快喘不過氣了⋯⋯</p>
-      <div class="tap-hint">右擊繼續</div>
+      <div class="tap-hint">繼續滑下一則</div>
     </div>
 
     <div class="reply-bar">
@@ -149,6 +158,15 @@
       <div class="reply-heart">
         <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </div>
+    </div>
+
+    <!-- 時間提示：00:15 -->
+    <div id="story-time-2" style="position:absolute;top:80px;right:20px;
+                font-size:15px;color:rgba(255,255,255,0.85);
+                font-family:'Noto Sans TC';letter-spacing:0.03em;
+                text-shadow:0 1px 4px rgba(0,0,0,0.5);
+                pointer-events:none;">
+      凌晨 00:15
     </div>
 
     <div class="tap-left"  onclick="goPrev()"></div>
@@ -197,7 +215,7 @@
       <h3>沐微的想法</h3>
       <!-- ⬇ 修改 -->
       <p>沒想到已經高中畢業四年了⋯⋯好想念高中那群朋友們⋯⋯大家每天都聚在一起、形影不離。現在在大學裡大家都來來去去，我也一直在跟隨著大家的步伐，但我究竟是為了什麼呢⋯⋯？</p>
-      <div class="tap-hint">右擊繼續</div>
+      <div class="tap-hint">繼續滑下一則</div>
     </div>
 
     <div class="reply-bar">
@@ -205,6 +223,15 @@
       <div class="reply-heart">
         <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </div>
+    </div>
+
+    <!-- 時間提示：00:35 -->
+    <div id="story-time-3" style="position:absolute;top:80px;right:20px;
+                font-size:15px;color:rgba(255,255,255,0.85);
+                font-family:'Noto Sans TC';letter-spacing:0.03em;
+                text-shadow:0 1px 4px rgba(0,0,0,0.5);
+                pointer-events:none;">
+      凌晨 00:35
     </div>
 
     <div class="tap-left"  onclick="goPrev()"></div>
@@ -378,10 +405,6 @@
         <span></span><span></span>
       </div>
 
-      <div class="final-buttons">
-        <button class="btn-back" onclick="goBack()">↩ 回上一頁</button>
-        <button class="btn-restart" onclick="restart()">↺ 從頭開始</button>
-      </div>
     </div>
   </div>
 

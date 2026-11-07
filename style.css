@@ -135,8 +135,8 @@ html, body {
 .thought-box {
   position: absolute; bottom: 220px; left: 45px; right: 45px;
   padding: 28px 24px 20px;
-  background: rgba(58,134,200,0.64);
-  border: 1px solid #3a86c8; border-radius: 29px;
+  background: rgba(30,30,30,0.72);
+  border: 1px solid rgba(255,255,255,0.15); border-radius: 29px;
   z-index: 20; pointer-events: none;
 }
 .thought-box h3 {
@@ -152,7 +152,7 @@ html, body {
 }
 .thought-dots span {
   display: block; border-radius: 50%;
-  background: rgba(58,134,200,0.64); border: 1px solid #3a86c8;
+  background: rgba(30,30,30,0.72); border: 1px solid rgba(255,255,255,0.15);
 }
 .thought-dots span:nth-child(1) { width: 22px; height: 22px; margin-bottom: 10px; }
 .thought-dots span:nth-child(2) { width: 11px; height: 11px; }
