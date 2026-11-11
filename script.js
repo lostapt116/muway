@@ -129,9 +129,9 @@ function clearMsgsTimers() {
   msgsTimers = [];
 }
 function resetMsgCards() {
-  ['msg-card-1','msg-card-2'].forEach(id => {
+  ['msg-card-1','msg-card-2','story3-notif'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.classList.remove('visible');
+    if (el) el.classList.remove('visible', 'pushed-down', 'notif-show', 'notif-hide');
   });
   const cs = document.getElementById('choice-section');
   if (cs) cs.classList.remove('visible');
@@ -157,6 +157,25 @@ function playNotificationSound() {
   } catch (e) { /* 靜默失敗 */ }
 }
 
+
+/* ── 限動3 使用時間通知 ── */
+function triggerStory3Notif() {
+  const notif = document.getElementById('story3-notif');
+  if (!notif) return;
+  // 重置
+  notif.classList.remove('notif-show', 'notif-hide');
+  void notif.offsetWidth;
+  // 滑入
+  notif.classList.add('visible', 'notif-show');
+  playNotificationSound();
+  // 3 秒後滑出
+  setTimeout(() => {
+    notif.classList.add('notif-hide');
+    setTimeout(() => {
+      notif.classList.remove('visible', 'notif-show', 'notif-hide');
+    }, 500);
+  }, 3000);
+}
 function startMsgsSequence() {
   clearMsgsTimers();
   resetMsgCards();
@@ -168,9 +187,11 @@ function startMsgsSequence() {
     playNotificationSound();
   }, 100));
 
-  // 訊息2：2 秒後 + 音效
+  // 訊息2：2 秒後 + 音效；同時把訊息1 往下推
   msgsTimers.push(setTimeout(() => {
+    const m1 = document.getElementById('msg-card-1');
     const m2 = document.getElementById('msg-card-2');
+    if (m1) m1.classList.add('pushed-down');
     if (m2) m2.classList.add('visible');
     playNotificationSound();
   }, 2100));
@@ -317,6 +338,7 @@ function goTo(idx) {
           scheduleThought(storyScreens[idx]);
           startStoryTime(idx);
         }
+        if (idx === 5) triggerStory3Notif();
         /* 如果是訊息頁，啟動時序淡入 */
         if (idx === 7) {
           startMsgsSequence();
@@ -328,6 +350,11 @@ function goTo(idx) {
         /* 如果是最終頁，啟動數字動畫 */
         if (idx === 11) {
           startFinalSequence();
+        }
+        /* 螢幕使用時間頁：顯示 60 分鐘 */
+        if (idx === 6) {
+          const stCounter = document.getElementById('st-counter');
+          if (stCounter) stCounter.textContent = '60';
         }
       }, 300);
     });
@@ -372,16 +399,24 @@ function showScreen(idx) {
   current = idx;
   const storyMap = { 1: 'screen-s1', 3: 'screen-s2', 5: 'screen-s3' };
   if (storyMap[idx]) { scheduleThought(storyMap[idx]); startStoryTime(idx); }
+  if (idx === 5) triggerStory3Notif();
   if (idx === 7) startMsgsSequence();
   if (idx === 9 || idx === 10) startResultSequence(idx);
+  if (idx === 6) {
+    // 螢幕使用時間頁：啟動分鐘數倒數
+    const stCounter = document.getElementById('st-counter');
+    if (stCounter) stCounter.textContent = '60';
+  }
   if (idx === 11) startFinalSequence();
 }
 
 /* ── 限動右側點擊：直接換到下一個限動（跳過想法頁 +2） ── */
 function goNextStory() {
-  const storyScreens = { 1: true, 3: true, 5: true };
+  const storyScreens = { 1: true, 3: true };
   if (storyScreens[current]) {
-    goTo(current + 2);
+    goTo(current + 2);  // 限動1/2：跳過空白頁直接到下一個限動
+  } else if (current === 5) {
+    goTo(6);            // 限動3結束：進入螢幕使用時間頁
   } else {
     goTo(current + 1);
   }

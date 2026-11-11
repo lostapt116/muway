@@ -239,9 +239,39 @@
   </div>
 
   <!-- ════════════════════════════════════
-       畫面 6：（保留，不使用）
+       畫面 6：螢幕使用時間限制頁
        ════════════════════════════════════ -->
-  <div class="screen" id="screen-t3"></div>
+  <div class="screen" id="screen-t3">
+    <div class="screentime-bg"></div>
+
+    <!-- 時鐘圖示 -->
+    <div class="screentime-icon">
+      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="40" r="34" stroke="rgba(255,255,255,0.9)" stroke-width="4"/>
+        <line x1="40" y1="22" x2="40" y2="42" stroke="rgba(255,255,255,0.9)" stroke-width="4" stroke-linecap="round"/>
+        <line x1="40" y1="42" x2="52" y2="50" stroke="rgba(255,255,255,0.9)" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="40" cy="42" r="3" fill="rgba(255,255,255,0.9)"/>
+      </svg>
+    </div>
+
+    <!-- 標題 -->
+    <div class="screentime-title">你已超過今天的<br>使用時間上限</div>
+
+    <!-- 應用名稱 -->
+    <div class="screentime-app">Lostagram</div>
+
+    <!-- 使用時間統計 -->
+    <div class="screentime-usage">今天已使用 <span id="st-counter">0</span> 分鐘</div>
+
+    <!-- 分隔線 -->
+    <div class="screentime-divider"></div>
+
+    <!-- 按鈕：15分鐘後提醒我 -->
+    <div class="screentime-btn" onclick="goTo(7)">15 分鐘後提醒我</div>
+
+    <!-- 忽略限制（灰色小字，不可點） -->
+    <div class="screentime-ignore">結束使用</div>
+  </div>
 
   <!-- ════════════════════════════════════
        畫面 7+8：訊息通知 → 情境選擇（同一畫面，時序淡入）
@@ -381,20 +411,11 @@
   <div class="screen" id="screen-final">
     <div class="bg" style="background: #0a0a0a;"></div>
 
-    <!-- 社群時間區塊 -->
-    <div class="final-stats">
-      <div class="final-stats-label">沐微今天在社群媒體上待了</div>
-      <div class="final-stats-number">
-        <span id="final-counter">0</span>
-      </div>
-      <div class="final-stats-unit">分　鐘</div>
-    </div>
-
     <!-- 延遲淡入區（2 秒後） -->
     <div class="final-delayed" id="final-delayed">
       <div class="final-sub-text">
         現在時間已經快接近凌晨一點了<br>
-        但沐微仍然沒有完成她書桌上的自然攝影計劃書
+        但沐微仍然沒有完成她書桌上的<strong class="plan-highlight">自然攝影計劃書</strong>
       </div>
 
       <div class="thought-box final-thought">

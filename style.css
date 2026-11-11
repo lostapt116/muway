@@ -290,9 +290,35 @@ html, body {
   pointer-events: auto;
 }
 
-/* 訊息2（第二則）在上，訊息1 在下 */
-#msg-card-1 { top: 120px; }
+/* 兩張卡都從頂部同一位置滑入，msg-1 被推下時 translateY */
+#msg-card-1 { top: 20px; }
 #msg-card-2 { top: 20px; }
+
+/* 限動3 使用時間通知 */
+.story3-notif {
+  top: 20px;
+  pointer-events: none;
+}
+@keyframes notifSlideOut {
+  0%   { opacity: 1; transform: translateY(0); }
+  80%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-56px); }
+}
+.story3-notif.notif-show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: none;
+}
+.story3-notif.notif-hide {
+  animation: notifSlideOut 0.5s ease forwards;
+}
+
+/* msg-1 被第二則推下去 */
+#msg-card-1.pushed-down {
+  transform: translateY(104px);
+  transition: opacity 0.35s ease,
+              transform 0.42s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
 
 /* 頭像 */
 .msg-card-avatar {
@@ -461,10 +487,23 @@ html, body {
 .result-thought-dots {
   position: relative !important;
   bottom: auto !important; left: auto !important;
-  display: flex; flex-direction: row; gap: 8px;
-  padding: 10px 0 16px 8px;
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 10px 0 16px 0;
+  margin-left: -15px;   /* 左移，模仿限動 dots 在 box 左下角的位置 */
+  pointer-events: none; z-index: 20;
 }
-.result-thought-dots span { display: inline-block; }
+.result-thought-dots span { display: block !important; }
+
+.result-unfinished {
+  position: absolute;
+  top: 580px; left: 45px; right: 45px;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 15px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.6;
+  text-align: left;
+  letter-spacing: 0.03em;
+}
 
 .result-btn-continue {
   position: relative !important;
@@ -515,12 +554,19 @@ html, body {
 .final-delayed.visible { opacity: 1; pointer-events: auto; }
 
 .final-sub-text {
-  font-size: 16px; color: rgba(255,255,255,0.65);
-  text-align: center; line-height: 1.7;
-  margin-bottom: 28px;
+  font-size: 26px; color: rgba(255,255,255,0.88);
+  text-align: center; line-height: 1.65;
+  margin-bottom: 32px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
 }
 
 /* 最終頁內的 thought-box 位置覆蓋 */
+.plan-highlight {
+  font-weight: 700;
+  color: #fff;
+}
+
 .final-thought {
   position: relative !important;
   bottom: auto !important; left: auto !important; right: auto !important;
@@ -529,10 +575,11 @@ html, body {
 .final-thought-dots {
   position: relative !important;
   bottom: auto !important; left: auto !important;
-  display: flex; flex-direction: row; gap: 8px;
-  padding: 10px 0 28px 8px;
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 10px 0 16px 0;
+  margin-left: -15px;
 }
-.final-thought-dots span { display: inline-block; }
+.final-thought-dots span { display: block; }
 
 /* 最終頁按鈕並排 */
 .final-buttons {
@@ -594,19 +641,31 @@ html, body {
 }
 
 /* thought-dots 在容器內重設 */
-.result-delayed .thought-dots,
-.final-delayed .thought-dots {
-  position: static !important;
+.result-delayed .thought-dots {
+  position: relative !important;
   bottom: auto !important;
   left: auto !important;
   display: flex !important;
-  flex-direction: row;
-  gap: 8px;
-  padding: 8px 0 12px 8px;
+  flex-direction: column !important;
+  gap: 10px !important;
+  padding: 10px 0 16px 0 !important;
+  margin-left: -15px !important;
 }
-.result-delayed .thought-dots span,
+.final-delayed .thought-dots {
+  position: relative !important;
+  bottom: auto !important;
+  left: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  padding: 10px 0 16px 0 !important;
+  margin-left: -15px !important;
+}
+.result-delayed .thought-dots span {
+  display: block !important;
+}
 .final-delayed .thought-dots span {
-  display: inline-block !important;
+  display: block !important;
 }
 
 /* final-delayed 本身確保可點擊 */
@@ -670,4 +729,101 @@ html, body {
 #screen-lock.unlock-out {
   transition: transform 0.45s cubic-bezier(0.32, 0, 0.67, 0) !important;
   transform: translateY(-100%) !important;
+}
+
+/* ══════════════════════════════════════
+   螢幕使用時間限制頁
+   ══════════════════════════════════════ */
+.screentime-bg {
+  position: absolute; inset: 0;
+  background: rgba(10,10,10,0.92);
+  backdrop-filter: blur(40px);
+}
+
+/* screentime 整頁淡入：從中心微微放大顯現 */
+@keyframes screentimeFadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+#screen-t3 { opacity: 0; }
+#screen-t3.active {
+  animation: screentimeFadeIn 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.05s forwards;
+}
+
+.screentime-icon {
+  position: absolute;
+  top: 320px; left: 50%;
+  transform: translateX(-50%);
+  width: 80px; height: 80px;
+  opacity: 0.9;
+}
+
+.screentime-title {
+  position: absolute;
+  top: 430px; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 28px; font-weight: 600;
+  color: rgba(255,255,255,0.92);
+  text-align: center; line-height: 1.5;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.screentime-app {
+  position: absolute;
+  top: 540px; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 18px;
+  color: rgba(255,255,255,0.45);
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+.screentime-usage {
+  position: absolute;
+  top: 580px; left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 17px;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.03em;
+}
+
+.screentime-divider {
+  position: absolute;
+  top: 630px; left: 60px; right: 60px;
+  height: 1px;
+  background: rgba(255,255,255,0.12);
+}
+
+.screentime-btn {
+  position: absolute;
+  top: 652px; left: 60px; right: 60px;
+  padding: 28px 0;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 22px; font-weight: 500;
+  color: rgba(255,255,255,0.92);
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.screentime-btn:active {
+  background: rgba(255,255,255,0.18);
+}
+
+.screentime-ignore {
+  position: absolute;
+  top: 782px; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 18px;
+  color: rgba(255,255,255,0.25);
+  text-align: center;
+  white-space: nowrap;
 }
