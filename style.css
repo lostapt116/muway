@@ -65,8 +65,8 @@ html, body {
   height: 210px; pointer-events: none; z-index: 10;margin-left: 24px;
 }
 .progress-bars {
-  position: absolute; left: 145px; top: 172px;
-  display: flex; gap: 15px; width: 600px;
+  position: absolute; left: 145px; right: 80px; top: 172px;
+  display: flex; gap: 15px;
 }
 .pb-seg {
   flex: 1; height: 5px; border-radius: 3px;
@@ -233,7 +233,12 @@ html, body {
   display: none;
   background: #0d0d0d;
 }
-#screen-final.active { display: block; }
+#screen-final.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 #screen-final .final-title {
   font-size: 36px; color: #fff; font-weight: 700; text-align: center;
   line-height: 1.4;
@@ -543,13 +548,15 @@ html, body {
 
 /* 延遲淡入區 */
 .final-delayed {
-  position: absolute;
-  left: 0; right: 0;
-  top: 560px;
+  position: relative;
+  width: 100%;
   padding: 0 45px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.6s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .final-delayed.visible { opacity: 1; pointer-events: auto; }
 
